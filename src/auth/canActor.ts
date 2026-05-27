@@ -51,9 +51,11 @@ export function canActor(
         actor.spaceSlug === resource.slug
       );
 
-    // Participate deliberation: any verified user or admin (P6)
+    // Participate deliberation: any authenticated user (P6)
+    // TODO: tighten to verified_citizen + verified_entity + admin before production
     case "participate_deliberation":
       return (
+        actor.role === "citizen" ||
         actor.role === "verified_citizen" ||
         actor.role === "verified_entity" ||
         actor.role === "admin"

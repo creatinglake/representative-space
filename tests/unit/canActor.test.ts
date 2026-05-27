@@ -129,8 +129,8 @@ describe("canActor", () => {
       expect(canActor(admin, "participate_deliberation", space)).toBe(true);
     });
 
-    it("denies plain citizen", () => {
-      expect(canActor(citizen, "participate_deliberation", space)).toBe(false);
+    it("allows plain citizen (relaxed for demo)", () => {
+      expect(canActor(citizen, "participate_deliberation", space)).toBe(true);
     });
   });
 

@@ -5,7 +5,7 @@ import { baseUrl, uiBaseUrl } from "../utils/baseUrl.js";
 
 const SERVICE_ID = "representative-space-local";
 
-export function emitEvent(input: CreateEventInput): CivicEvent {
+export async function emitEvent(input: CreateEventInput): Promise<CivicEvent> {
   const hub = baseUrl();
   const ui = uiBaseUrl();
   const path = input.action_url_path ?? `/space/${input.space_slug}`;
@@ -34,7 +34,7 @@ export function emitEvent(input: CreateEventInput): CivicEvent {
     event.dedupe_key = input.dedupe_key;
   }
 
-  appendEvent(event);
+  await appendEvent(event);
 
   console.log(`[event] ${event.event_type} by ${event.actor} (${event.id})`);
 

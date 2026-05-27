@@ -8,10 +8,10 @@ function extractTokenValue(req: Request): string | null {
   return null;
 }
 
-export function createProcess(req: Request, res: Response): void {
+export async function createProcess(req: Request, res: Response): Promise<void> {
   try {
     const slug = req.params.slug as string;
-    const actor = resolveActor(res, slug);
+    const actor = await resolveActor(res, slug);
     const { definition, title, description, state } = req.body;
 
     if (!definition?.type || !title) {
@@ -19,7 +19,7 @@ export function createProcess(req: Request, res: Response): void {
       return;
     }
 
-    const process = processService.createProcess(
+    const process = await processService.createProcess(
       slug,
       { definition, title, description: description ?? "", createdBy: actor.userId, state },
       actor,
@@ -39,12 +39,12 @@ export function createProcess(req: Request, res: Response): void {
   }
 }
 
-export function getProcess(req: Request, res: Response): void {
+export async function getProcess(req: Request, res: Response): Promise<void> {
   try {
     const slug = req.params.slug as string;
     const processId = req.params.processId as string;
     const actorId = extractTokenValue(req);
-    const readModel = processService.getProcess(slug, processId, actorId ?? undefined);
+    const readModel = await processService.getProcess(slug, processId, actorId ?? undefined);
     res.json(readModel);
   } catch (err: any) {
     if (err.message?.includes("not found")) {
@@ -55,10 +55,10 @@ export function getProcess(req: Request, res: Response): void {
   }
 }
 
-export function listProcesses(req: Request, res: Response): void {
+export async function listProcesses(req: Request, res: Response): Promise<void> {
   try {
     const slug = req.params.slug as string;
-    const processes = processService.listProcesses(slug);
+    const processes = await processService.listProcesses(slug);
     res.json({ processes });
   } catch (err: any) {
     if (err.message?.includes("not found")) {
@@ -73,7 +73,7 @@ export async function executeAction(req: Request, res: Response): Promise<void> 
   try {
     const slug = req.params.slug as string;
     const processId = req.params.processId as string;
-    const actor = resolveActor(res, slug);
+    const actor = await resolveActor(res, slug);
     const { type, payload } = req.body;
 
     if (!type) {

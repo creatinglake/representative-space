@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 import * as outcomeService from "../services/outcomeService.js";
 
-export function handleReceiveOutcome(req: Request, res: Response): void {
+export async function handleReceiveOutcome(req: Request, res: Response): Promise<void> {
   try {
-    const outcome = outcomeService.receiveOutcomeDelivery(
+    const outcome = await outcomeService.receiveOutcomeDelivery(
       (req.params.slug as string),
       req.body,
     );
@@ -18,9 +18,9 @@ export function handleReceiveOutcome(req: Request, res: Response): void {
   }
 }
 
-export function handleListOutcomes(req: Request, res: Response): void {
+export async function handleListOutcomes(req: Request, res: Response): Promise<void> {
   try {
-    const outcomes = outcomeService.getOutcomes((req.params.slug as string));
+    const outcomes = await outcomeService.getOutcomes((req.params.slug as string));
     res.json(outcomes);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
@@ -32,9 +32,9 @@ export function handleListOutcomes(req: Request, res: Response): void {
   }
 }
 
-export function handleGetOutcome(req: Request, res: Response): void {
+export async function handleGetOutcome(req: Request, res: Response): Promise<void> {
   try {
-    const result = outcomeService.getOutcomeWithResponse(
+    const result = await outcomeService.getOutcomeWithResponse(
       (req.params.slug as string),
       (req.params.id as string),
     );

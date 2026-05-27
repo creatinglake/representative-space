@@ -30,7 +30,7 @@ describe("Immutable Responses — Polis deliberation outcomes", () => {
 
   async function createPolisOutcome(slug: string) {
     // Create outcome as if the Polis handler produced it
-    const outcome = writeInternalOutcome(slug, {
+    const outcome = await writeInternalOutcome(slug, {
       originating_process_id: "prc_test_polis",
       originating_process_type: "civic.polis_deliberation",
       outcome_summary: "Deliberation found consensus on infrastructure priorities.",

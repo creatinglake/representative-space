@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   PROMPT_VERSION,
   SYSTEM_PROMPT,
-} from "../../../shared/process-plugins/polis_deliberation/src/summarization/promptBuilder.js";
+} from "../shared/polis_deliberation/summarization/promptBuilder.js";
 
 const router = Router();
 

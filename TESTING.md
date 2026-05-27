@@ -49,7 +49,7 @@ Updated after every slice. Tracks which flows are tested and how.
 | Verified citizen can participate_deliberation | Yes |
 | Verified entity can participate_deliberation | Yes |
 | Admin can participate_deliberation | Yes |
-| Plain citizen denied participate_deliberation | Yes |
+| Plain citizen allowed participate_deliberation (relaxed for demo) | Yes |
 
 ---
 
@@ -259,7 +259,7 @@ Updated after every slice. Tracks which flows are tested and how.
 | State initializes deadline + threshold | Yes |
 | State initializes continued_from_response_id | Yes |
 | Vote without auth → 401 | Yes |
-| Vote as citizen → 403 | Yes |
+| Vote by citizen on draft process → 409 | Yes |
 | Submit statement without auth → 401 | Yes |
 | Get next statement without auth → 401 | Yes |
 | Vote on draft process → 409 | Yes |
@@ -290,6 +290,7 @@ Updated after every slice. Tracks which flows are tested and how.
 
 ## Not Yet Covered (deferred to later sessions)
 
+- **Supabase-mode integration tests**: all 198 tests run in-memory mode only; no automated tests for the Supabase code path (manually verified via curl + browser)
 - Entity profile edit via PATCH with verified_entity auth (needs verification + entity_did matching flow)
 - Frontend component rendering (no E2E tests yet)
 - Linked official sites CRUD

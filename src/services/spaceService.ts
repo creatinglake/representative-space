@@ -22,10 +22,10 @@ const RESERVED_SLUGS = new Set([
 
 const verificationRecords: VerificationRecord[] = [];
 
-export function createSpace(
+export async function createSpace(
   input: CreateSpaceInput,
   adminUserId: string,
-): RepresentativeSpace {
+): Promise<RepresentativeSpace> {
   if (!input.sub_type || !input.entity_slug || !input.jurisdiction ||
       !input.office_or_candidacy_label || !input.display_name) {
     throw new Error(
@@ -43,7 +43,7 @@ export function createSpace(
     throw new Error(`Slug "${input.entity_slug}" is reserved`);
   }
 
-  if (store.slugExists(input.entity_slug)) {
+  if (await store.slugExists(input.entity_slug)) {
     throw new Error(`Slug "${input.entity_slug}" already exists`);
   }
 
@@ -74,9 +74,9 @@ export function createSpace(
     },
   };
 
-  store.createSpace(space);
+  await store.createSpace(space);
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.space.created",
     actor: adminUserId,
     space_slug: space.entity_slug,
@@ -91,13 +91,13 @@ export function createSpace(
   return space;
 }
 
-export function getSpaceBySlug(
+export async function getSpaceBySlug(
   slug: string,
-): RepresentativeSpace | undefined {
+): Promise<RepresentativeSpace | undefined> {
   return store.getSpaceBySlug(slug);
 }
 
-export function getAllSpaces(): RepresentativeSpace[] {
+export async function getAllSpaces(): Promise<RepresentativeSpace[]> {
   return store.getAllSpaces();
 }
 
@@ -110,12 +110,12 @@ const PROFILE_FIELDS = new Set([
   "linked_official_sites",
 ]);
 
-export function updateSpace(
+export async function updateSpace(
   slug: string,
   input: UpdateSpaceInput,
   actor: Actor,
-): RepresentativeSpace {
-  const space = store.getSpaceBySlug(slug);
+): Promise<RepresentativeSpace> {
+  const space = await store.getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -170,12 +170,12 @@ export function updateSpace(
     spacePatch.profile = { ...space.profile, ...profilePatch };
   }
 
-  const updated = store.updateSpace(space.id, spacePatch);
+  const updated = await store.updateSpace(space.id, spacePatch);
   if (!updated) {
     throw new Error(`Failed to update space "${slug}"`);
   }
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.space.updated",
     actor: actor.userId,
     space_slug: slug,
@@ -188,12 +188,12 @@ export function updateSpace(
   return updated;
 }
 
-export function verifyEntity(
+export async function verifyEntity(
   slug: string,
   adminUserId: string,
   input: VerifyEntityInput,
-): { space: RepresentativeSpace; verification: VerificationRecord } {
-  const space = store.getSpaceBySlug(slug);
+): Promise<{ space: RepresentativeSpace; verification: VerificationRecord }> {
+  const space = await store.getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -209,7 +209,7 @@ export function verifyEntity(
 
   verificationRecords.push(record);
 
-  const updated = store.updateSpace(space.id, {
+  const updated = await store.updateSpace(space.id, {
     verification_status: "verified",
     entity_did: input.entity_did ?? null,
   });
@@ -218,7 +218,7 @@ export function verifyEntity(
     throw new Error(`Failed to verify space "${slug}"`);
   }
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.space.verified",
     actor: adminUserId,
     space_slug: slug,
@@ -238,13 +238,13 @@ export function getVerificationRecords(
   return verificationRecords.filter((r) => r.space_id === spaceId);
 }
 
-export function archiveSpace(
+export async function archiveSpace(
   slug: string,
   adminUserId: string,
   reason: string,
   successorSpaceSlug?: string,
-): RepresentativeSpace {
-  const space = store.getSpaceBySlug(slug);
+): Promise<RepresentativeSpace> {
+  const space = await store.getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -254,13 +254,13 @@ export function archiveSpace(
   }
 
   if (successorSpaceSlug) {
-    const successor = store.getSpaceBySlug(successorSpaceSlug);
+    const successor = await store.getSpaceBySlug(successorSpaceSlug);
     if (!successor) {
       throw new Error(`Successor space "${successorSpaceSlug}" not found`);
     }
   }
 
-  const updated = store.updateSpace(space.id, {
+  const updated = await store.updateSpace(space.id, {
     lifecycle_state: "archived",
     archived_at: new Date().toISOString(),
     archived_by: adminUserId,
@@ -272,7 +272,7 @@ export function archiveSpace(
     throw new Error(`Failed to archive space "${slug}"`);
   }
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.space.archived",
     actor: adminUserId,
     space_slug: slug,
@@ -286,16 +286,16 @@ export function archiveSpace(
   return updated;
 }
 
-export function unarchiveSpace(
+export async function unarchiveSpace(
   slug: string,
   adminUserId: string,
-): RepresentativeSpace {
-  const space = store.getSpaceBySlug(slug);
+): Promise<RepresentativeSpace> {
+  const space = await store.getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  const updated = store.updateSpace(space.id, {
+  const updated = await store.updateSpace(space.id, {
     lifecycle_state: "active",
     archived_at: null,
     archived_by: null,
@@ -307,7 +307,7 @@ export function unarchiveSpace(
     throw new Error(`Failed to unarchive space "${slug}"`);
   }
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.space.unarchived",
     actor: adminUserId,
     space_slug: slug,

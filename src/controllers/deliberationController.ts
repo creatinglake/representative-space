@@ -3,11 +3,11 @@ import { resolveActor } from "../middleware/auth.js";
 import { canActor } from "../auth/canActor.js";
 import { getPolisAdapter } from "../processes/boot.js";
 import * as processService from "../services/processService.js";
-import type { PolisDeliberationState } from "../../../shared/process-plugins/polis_deliberation/src/types.js";
-import type { VoteDirection } from "../../../shared/process-plugins/polis_deliberation/src/adapter/types.js";
+import type { PolisDeliberationState } from "../shared/polis_deliberation/types.js";
+import type { VoteDirection } from "../shared/polis_deliberation/adapter/types.js";
 
-function getConversationId(slug: string, processId: string): string {
-  const process = processService.getRawProcess(slug, processId);
+async function getConversationId(slug: string, processId: string): Promise<string> {
+  const process = await processService.getRawProcess(slug, processId);
   if (!process) {
     throw new Error(`Process "${processId}" not found on space "${slug}"`);
   }
@@ -25,7 +25,7 @@ export async function vote(req: Request, res: Response): Promise<void> {
   try {
     const slug = req.params.slug as string;
     const processId = req.params.processId as string;
-    const actor = resolveActor(res, slug);
+    const actor = await resolveActor(res, slug);
 
     if (!canActor(actor, "participate_deliberation", { type: "space", slug })) {
       res.status(403).json({ error: "Not authorized to participate in deliberations" });
@@ -44,7 +44,7 @@ export async function vote(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const conversationId = getConversationId(slug, processId);
+    const conversationId = await getConversationId(slug, processId);
     const adapter = getPolisAdapter();
 
     await adapter.recordVote(conversationId, actor.userId, statement_id, direction);
@@ -66,7 +66,7 @@ export async function submitStatement(req: Request, res: Response): Promise<void
   try {
     const slug = req.params.slug as string;
     const processId = req.params.processId as string;
-    const actor = resolveActor(res, slug);
+    const actor = await resolveActor(res, slug);
 
     if (!canActor(actor, "participate_deliberation", { type: "space", slug })) {
       res.status(403).json({ error: "Not authorized to participate in deliberations" });
@@ -79,7 +79,7 @@ export async function submitStatement(req: Request, res: Response): Promise<void
       return;
     }
 
-    const conversationId = getConversationId(slug, processId);
+    const conversationId = await getConversationId(slug, processId);
     const adapter = getPolisAdapter();
 
     const result = await adapter.submitStatement(conversationId, actor.userId, text.trim());
@@ -101,14 +101,14 @@ export async function getNextStatement(req: Request, res: Response): Promise<voi
   try {
     const slug = req.params.slug as string;
     const processId = req.params.processId as string;
-    const actor = resolveActor(res, slug);
+    const actor = await resolveActor(res, slug);
 
     if (!canActor(actor, "participate_deliberation", { type: "space", slug })) {
       res.status(403).json({ error: "Not authorized to participate in deliberations" });
       return;
     }
 
-    const conversationId = getConversationId(slug, processId);
+    const conversationId = await getConversationId(slug, processId);
     const adapter = getPolisAdapter();
 
     const statement = await adapter.getNextStatement(conversationId, actor.userId);
@@ -130,7 +130,7 @@ export async function getClusterState(req: Request, res: Response): Promise<void
   try {
     const slug = req.params.slug as string;
     const processId = req.params.processId as string;
-    const conversationId = getConversationId(slug, processId);
+    const conversationId = await getConversationId(slug, processId);
     const adapter = getPolisAdapter();
 
     const clusters = await adapter.pullClusterState(conversationId);
@@ -150,7 +150,7 @@ export async function closeDeliberation(req: Request, res: Response): Promise<vo
   try {
     const slug = req.params.slug as string;
     const processId = req.params.processId as string;
-    const actor = resolveActor(res, slug);
+    const actor = await resolveActor(res, slug);
 
     if (!canActor(actor, "host_deliberation", { type: "space", slug })) {
       res.status(403).json({ error: "Not authorized to manage deliberations on this space" });
@@ -179,7 +179,7 @@ export async function regenerateSummary(req: Request, res: Response): Promise<vo
   try {
     const slug = req.params.slug as string;
     const processId = req.params.processId as string;
-    const actor = resolveActor(res, slug);
+    const actor = await resolveActor(res, slug);
 
     if (!canActor(actor, "host_deliberation", { type: "space", slug })) {
       res.status(403).json({ error: "Not authorized to manage deliberations on this space" });

@@ -12,12 +12,12 @@ import { getSpaceBySlug } from "../stores/spaceStore.js";
 import { emitEvent } from "../events/eventEmitter.js";
 import { generateId } from "../utils/id.js";
 
-export function raiseIssue(
+export async function raiseIssue(
   slug: string,
   input: RaiseIssueInput,
   actor: Actor,
-): CitizenIssue {
-  const space = getSpaceBySlug(slug);
+): Promise<CitizenIssue> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -71,9 +71,9 @@ export function raiseIssue(
     updated_at: now,
   };
 
-  issueStore.addIssue(issue);
+  await issueStore.addIssue(issue);
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.issue_raised",
     actor: actor.userId,
     space_slug: slug,
@@ -88,16 +88,16 @@ export function raiseIssue(
   return issue;
 }
 
-export function listIssues(
+export async function listIssues(
   slug: string,
   filters?: { entry_type?: string; status?: string },
-): CitizenIssue[] {
-  const space = getSpaceBySlug(slug);
+): Promise<CitizenIssue[]> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  let issues = issueStore.getIssuesBySlug(slug);
+  let issues = await issueStore.getIssuesBySlug(slug);
 
   // Exclude hidden issues from public list
   issues = issues.filter((i) => !i.moderation.hidden);
@@ -121,16 +121,16 @@ export function listIssues(
   return issues;
 }
 
-export function getIssue(
+export async function getIssue(
   slug: string,
   issueId: string,
-): CitizenIssue {
-  const space = getSpaceBySlug(slug);
+): Promise<CitizenIssue> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  const issue = issueStore.getIssueById(issueId);
+  const issue = await issueStore.getIssueById(issueId);
   if (!issue || issue.space_slug !== slug) {
     throw new Error(`Issue "${issueId}" not found on space "${slug}"`);
   }
@@ -146,18 +146,18 @@ export function getIssue(
   return issue;
 }
 
-export function editIssue(
+export async function editIssue(
   slug: string,
   issueId: string,
   input: EditIssueInput,
   actor: Actor,
-): CitizenIssue {
-  const space = getSpaceBySlug(slug);
+): Promise<CitizenIssue> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  const issue = issueStore.getIssueById(issueId);
+  const issue = await issueStore.getIssueById(issueId);
   if (!issue || issue.space_slug !== slug) {
     throw new Error(`Issue "${issueId}" not found on space "${slug}"`);
   }
@@ -179,9 +179,9 @@ export function editIssue(
     updated_at: now,
   };
 
-  issueStore.updateIssue(issue.id, updated);
+  await issueStore.updateIssue(issue.id, updated);
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.issue_edited",
     actor: actor.userId,
     space_slug: slug,
@@ -196,13 +196,13 @@ export function editIssue(
   return updated;
 }
 
-export function signalIssue(
+export async function signalIssue(
   slug: string,
   issueId: string,
   signal: string,
   actor: Actor,
-): { signal: string; issue_id: string } {
-  const space = getSpaceBySlug(slug);
+): Promise<{ signal: string; issue_id: string }> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -211,7 +211,7 @@ export function signalIssue(
     throw new Error("Not authorized to signal on issues");
   }
 
-  const issue = issueStore.getIssueById(issueId);
+  const issue = await issueStore.getIssueById(issueId);
   if (!issue || issue.space_slug !== slug) {
     throw new Error(`Issue "${issueId}" not found on space "${slug}"`);
   }
@@ -230,7 +230,7 @@ export function signalIssue(
   }
 
   // Get previous signal and remove its count
-  const prevSignal = issueStore.getSignal(issueId, actor.userId);
+  const prevSignal = await issueStore.getSignal(issueId, actor.userId);
   const tally = { ...issue.signal_tally };
   const pollTally = { ...issue.poll_tally };
 
@@ -249,13 +249,13 @@ export function signalIssue(
     pollTally[signal] = (pollTally[signal] ?? 0) + 1;
   }
 
-  issueStore.setSignal(issueId, actor.userId, signal);
-  issueStore.updateIssue(issueId, {
+  await issueStore.setSignal(issueId, actor.userId, signal);
+  await issueStore.updateIssue(issueId, {
     signal_tally: tally,
     poll_tally: pollTally,
   });
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.issue_signaled",
     actor: actor.userId,
     space_slug: slug,
@@ -269,12 +269,12 @@ export function signalIssue(
   return { signal, issue_id: issueId };
 }
 
-export function closeIssue(
+export async function closeIssue(
   slug: string,
   issueId: string,
   actor: Actor,
-): CitizenIssue {
-  const space = getSpaceBySlug(slug);
+): Promise<CitizenIssue> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -283,12 +283,12 @@ export function closeIssue(
     throw new Error("Not authorized to close issues on this space");
   }
 
-  const issue = issueStore.getIssueById(issueId);
+  const issue = await issueStore.getIssueById(issueId);
   if (!issue || issue.space_slug !== slug) {
     throw new Error(`Issue "${issueId}" not found on space "${slug}"`);
   }
 
-  const updated = issueStore.updateIssue(issueId, {
+  const updated = await issueStore.updateIssue(issueId, {
     status: "closed",
     updated_at: new Date().toISOString(),
   });
@@ -297,7 +297,7 @@ export function closeIssue(
     throw new Error(`Failed to close issue "${issueId}"`);
   }
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.issue_closed",
     actor: actor.userId,
     space_slug: slug,
@@ -310,13 +310,13 @@ export function closeIssue(
   return updated;
 }
 
-export function respondToIssue(
+export async function respondToIssue(
   slug: string,
   issueId: string,
   content: string,
   actor: Actor,
-): IssueResponse {
-  const space = getSpaceBySlug(slug);
+): Promise<IssueResponse> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -325,7 +325,7 @@ export function respondToIssue(
     throw new Error("Not authorized to respond on this space");
   }
 
-  const issue = issueStore.getIssueById(issueId);
+  const issue = await issueStore.getIssueById(issueId);
   if (!issue || issue.space_slug !== slug) {
     throw new Error(`Issue "${issueId}" not found on space "${slug}"`);
   }
@@ -345,14 +345,14 @@ export function respondToIssue(
     prior_version_id: null,
   };
 
-  issueStore.addIssueResponse(response);
-  issueStore.updateIssue(issueId, {
+  await issueStore.addIssueResponse(response);
+  await issueStore.updateIssue(issueId, {
     status: "responded",
     latest_response: response,
     updated_at: new Date().toISOString(),
   });
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.issue_responded",
     actor: actor.userId,
     space_slug: slug,
@@ -366,13 +366,13 @@ export function respondToIssue(
   return response;
 }
 
-export function editIssueResponse(
+export async function editIssueResponse(
   slug: string,
   issueId: string,
   content: string,
   actor: Actor,
-): IssueResponse {
-  const space = getSpaceBySlug(slug);
+): Promise<IssueResponse> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -381,12 +381,12 @@ export function editIssueResponse(
     throw new Error("Not authorized to respond on this space");
   }
 
-  const issue = issueStore.getIssueById(issueId);
+  const issue = await issueStore.getIssueById(issueId);
   if (!issue || issue.space_slug !== slug) {
     throw new Error(`Issue "${issueId}" not found on space "${slug}"`);
   }
 
-  const prev = issueStore.getLatestIssueResponse(issueId);
+  const prev = await issueStore.getLatestIssueResponse(issueId);
   if (!prev) {
     throw new Error("No existing response to edit");
   }
@@ -406,8 +406,8 @@ export function editIssueResponse(
     prior_version_id: prev.id,
   };
 
-  issueStore.addIssueResponse(response);
-  issueStore.updateIssue(issueId, {
+  await issueStore.addIssueResponse(response);
+  await issueStore.updateIssue(issueId, {
     latest_response: response,
     updated_at: new Date().toISOString(),
   });
@@ -415,18 +415,18 @@ export function editIssueResponse(
   return response;
 }
 
-export function hideIssue(
+export async function hideIssue(
   slug: string,
   issueId: string,
   reason: string,
   adminUserId: string,
-): CitizenIssue {
-  const space = getSpaceBySlug(slug);
+): Promise<CitizenIssue> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  const issue = issueStore.getIssueById(issueId);
+  const issue = await issueStore.getIssueById(issueId);
   if (!issue || issue.space_slug !== slug) {
     throw new Error(`Issue "${issueId}" not found on space "${slug}"`);
   }
@@ -435,7 +435,7 @@ export function hideIssue(
     throw new Error("Moderation reason is required");
   }
 
-  const updated = issueStore.updateIssue(issueId, {
+  const updated = await issueStore.updateIssue(issueId, {
     moderation: {
       hidden: true,
       reason: reason.trim(),
@@ -448,7 +448,7 @@ export function hideIssue(
     throw new Error(`Failed to hide issue "${issueId}"`);
   }
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.content.hidden",
     actor: adminUserId,
     space_slug: slug,
@@ -464,22 +464,22 @@ export function hideIssue(
   return updated;
 }
 
-export function restoreIssue(
+export async function restoreIssue(
   slug: string,
   issueId: string,
   adminUserId: string,
-): CitizenIssue {
-  const space = getSpaceBySlug(slug);
+): Promise<CitizenIssue> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  const issue = issueStore.getIssueById(issueId);
+  const issue = await issueStore.getIssueById(issueId);
   if (!issue || issue.space_slug !== slug) {
     throw new Error(`Issue "${issueId}" not found on space "${slug}"`);
   }
 
-  const updated = issueStore.updateIssue(issueId, {
+  const updated = await issueStore.updateIssue(issueId, {
     moderation: {
       ...issue.moderation,
       hidden: false,
@@ -491,7 +491,7 @@ export function restoreIssue(
     throw new Error(`Failed to restore issue "${issueId}"`);
   }
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.content.restored",
     actor: adminUserId,
     space_slug: slug,

@@ -6,13 +6,13 @@ import { requireModeration } from "../modules/civic.moderation/service.js";
 
 export async function handlePostPosition(req: Request, res: Response): Promise<void> {
   try {
-    const actor = resolveActor(res, (req.params.slug as string));
+    const actor = await resolveActor(res, (req.params.slug as string));
 
     // Moderation check
     const content = `${req.body.topic ?? ""}\n\n${req.body.statement ?? ""}`;
     await requireModeration(content);
 
-    const position = positionService.postPosition(
+    const position = await positionService.postPosition(
       (req.params.slug as string),
       req.body,
       actor,
@@ -39,13 +39,13 @@ export async function handlePostPosition(req: Request, res: Response): Promise<v
 
 export async function handleEditPosition(req: Request, res: Response): Promise<void> {
   try {
-    const actor = resolveActor(res, (req.params.slug as string));
+    const actor = await resolveActor(res, (req.params.slug as string));
 
     // Moderation check
     const content = req.body.statement ?? "";
     await requireModeration(content);
 
-    const position = positionService.editPosition(
+    const position = await positionService.editPosition(
       (req.params.slug as string),
       (req.params.id as string),
       req.body,
@@ -71,9 +71,9 @@ export async function handleEditPosition(req: Request, res: Response): Promise<v
   }
 }
 
-export function handleListPositions(req: Request, res: Response): void {
+export async function handleListPositions(req: Request, res: Response): Promise<void> {
   try {
-    const positions = positionService.getPositions((req.params.slug as string));
+    const positions = await positionService.getPositions((req.params.slug as string));
     res.json(positions);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
@@ -85,9 +85,9 @@ export function handleListPositions(req: Request, res: Response): void {
   }
 }
 
-export function handleGetPositionHistory(req: Request, res: Response): void {
+export async function handleGetPositionHistory(req: Request, res: Response): Promise<void> {
   try {
-    const history = positionService.getPositionHistory(
+    const history = await positionService.getPositionHistory(
       (req.params.slug as string),
       (req.params.id as string),
     );

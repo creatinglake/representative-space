@@ -6,11 +6,11 @@ import { getSpaceBySlug } from "../stores/spaceStore.js";
 import { emitEvent } from "../events/eventEmitter.js";
 import { generateId } from "../utils/id.js";
 
-export function receiveOutcomeDelivery(
+export async function receiveOutcomeDelivery(
   slug: string,
   payload: InboxPayload,
-): OutcomeDelivery {
-  const space = getSpaceBySlug(slug);
+): Promise<OutcomeDelivery> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -27,9 +27,9 @@ export function receiveOutcomeDelivery(
     response_id: null,
   };
 
-  store.addOutcome(outcome);
+  await store.addOutcome(outcome);
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.outcome_delivered",
     actor: payload.originating_hub_id,
     space_slug: slug,
@@ -56,11 +56,11 @@ export interface InternalOutcomePayload {
   result: Record<string, unknown>;
 }
 
-export function writeInternalOutcome(
+export async function writeInternalOutcome(
   slug: string,
   payload: InternalOutcomePayload,
-): OutcomeDelivery {
-  const space = getSpaceBySlug(slug);
+): Promise<OutcomeDelivery> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -78,7 +78,7 @@ export function writeInternalOutcome(
     response_id: null,
   };
 
-  store.addOutcome(outcome);
+  await store.addOutcome(outcome);
 
   return outcome;
 }
@@ -87,40 +87,45 @@ export interface OutcomeWithLatestResponse extends OutcomeDelivery {
   latest_response: EntityResponse | null;
 }
 
-export function getOutcomes(slug: string): OutcomeWithLatestResponse[] {
-  const space = getSpaceBySlug(slug);
+export async function getOutcomes(slug: string): Promise<OutcomeWithLatestResponse[]> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  return store.getOutcomesBySlug(slug).map((outcome) => ({
-    ...outcome,
-    latest_response:
-      getLatestResponseForTarget("outcome_delivery", outcome.id) ?? null,
-  }));
+  const outcomes = await store.getOutcomesBySlug(slug);
+  const results: OutcomeWithLatestResponse[] = [];
+  for (const outcome of outcomes) {
+    const latest = await getLatestResponseForTarget("outcome_delivery", outcome.id);
+    results.push({
+      ...outcome,
+      latest_response: latest ?? null,
+    });
+  }
+  return results;
 }
 
-export function getOutcomeWithResponse(
+export async function getOutcomeWithResponse(
   slug: string,
   outcomeId: string,
-): {
+): Promise<{
   outcome: OutcomeDelivery;
   response: EntityResponse | null;
   response_history: EntityResponse[];
-} {
-  const space = getSpaceBySlug(slug);
+}> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  const outcome = store.getOutcomeById(outcomeId);
+  const outcome = await store.getOutcomeById(outcomeId);
   if (!outcome || outcome.addressed_to_slug !== slug) {
     throw new Error(`Outcome "${outcomeId}" not found on space "${slug}"`);
   }
 
   const latest =
-    getLatestResponseForTarget("outcome_delivery", outcomeId) ?? null;
-  const history = getResponsesByTargetId(outcomeId);
+    (await getLatestResponseForTarget("outcome_delivery", outcomeId)) ?? null;
+  const history = await getResponsesByTargetId(outcomeId);
 
   return { outcome, response: latest, response_history: history };
 }

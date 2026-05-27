@@ -73,8 +73,6 @@ export default function IssueBoardComposer({ slug, onDone, onCancel }: Props) {
         title: title.trim(),
         body: body.trim(),
         jurisdiction_tag: jurisdictionTag.trim(),
-        evidence_links:
-          evidenceLinks.length > 0 ? evidenceLinks : undefined,
         poll_options:
           entryType === "poll"
             ? pollOptions.filter((o) => o.trim().length > 0)

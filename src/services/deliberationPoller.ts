@@ -12,7 +12,7 @@ export function startPoller(): void {
   );
 
   timer = setInterval(async () => {
-    const active = getProcessesByStatus("active");
+    const active = await getProcessesByStatus("active");
     for (const proc of active) {
       if (proc.definition.type !== "civic.polis_deliberation") continue;
       try {

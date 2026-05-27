@@ -287,7 +287,7 @@ describe("Deliberation — Process Lifecycle & Participation Proxy", () => {
       expect(res.status).toBe(401);
     });
 
-    it("vote rejects citizen (not verified_citizen) → 403", async () => {
+    it("vote by citizen on draft process → 409 (relaxed auth, but draft blocks)", async () => {
       const slug = uniqueSlug("delib-vote-cit");
       await createVerifiedSpace(slug, ENTITY_DID);
 
@@ -310,7 +310,7 @@ describe("Deliberation — Process Lifecycle & Participation Proxy", () => {
         },
       );
 
-      expect(res.status).toBe(403);
+      expect(res.status).toBe(409);
     });
 
     it("submit statement rejects without auth → 401", async () => {

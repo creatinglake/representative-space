@@ -77,7 +77,7 @@ export function getAuthUser(res: Response): AuthUser {
   return user;
 }
 
-export function resolveActor(res: Response, spaceSlug?: string): Actor {
+export async function resolveActor(res: Response, spaceSlug?: string): Promise<Actor> {
   const user = getAuthUser(res);
   const admins = adminEmails();
 
@@ -86,7 +86,7 @@ export function resolveActor(res: Response, spaceSlug?: string): Actor {
   }
 
   if (spaceSlug) {
-    const space = getSpaceBySlug(spaceSlug);
+    const space = await getSpaceBySlug(spaceSlug);
     if (
       space &&
       space.verification_status === "verified" &&

@@ -7,13 +7,13 @@ import { getSpaceBySlug } from "../stores/spaceStore.js";
 import { emitEvent } from "../events/eventEmitter.js";
 import { generateId } from "../utils/id.js";
 
-export function postResponse(
+export async function postResponse(
   slug: string,
   outcomeId: string,
   input: CreateResponseInput,
   actor: Actor,
-): EntityResponse {
-  const space = getSpaceBySlug(slug);
+): Promise<EntityResponse> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -22,7 +22,7 @@ export function postResponse(
     throw new Error("Not authorized to respond on this space");
   }
 
-  const outcome = outcomeStore.getOutcomeById(outcomeId);
+  const outcome = await outcomeStore.getOutcomeById(outcomeId);
   if (!outcome || outcome.addressed_to_slug !== slug) {
     throw new Error(`Outcome "${outcomeId}" not found on space "${slug}"`);
   }
@@ -52,10 +52,10 @@ export function postResponse(
     ...(isImmutable ? { immutable: true } : {}),
   };
 
-  responseStore.addResponse(response);
-  outcomeStore.updateOutcome(outcomeId, { response_id: response.id });
+  await responseStore.addResponse(response);
+  await outcomeStore.updateOutcome(outcomeId, { response_id: response.id });
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.response_posted",
     actor: actor.userId,
     space_slug: slug,
@@ -70,13 +70,13 @@ export function postResponse(
   return response;
 }
 
-export function editResponse(
+export async function editResponse(
   slug: string,
   outcomeId: string,
   input: UpdateResponseInput,
   actor: Actor,
-): EntityResponse {
-  const space = getSpaceBySlug(slug);
+): Promise<EntityResponse> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -85,7 +85,7 @@ export function editResponse(
     throw new Error("Not authorized to respond on this space");
   }
 
-  const outcome = outcomeStore.getOutcomeById(outcomeId);
+  const outcome = await outcomeStore.getOutcomeById(outcomeId);
   if (!outcome || outcome.addressed_to_slug !== slug) {
     throw new Error(`Outcome "${outcomeId}" not found on space "${slug}"`);
   }
@@ -94,7 +94,7 @@ export function editResponse(
     throw new Error("No existing response to edit. Use post to create one.");
   }
 
-  const prev = responseStore.getResponseById(outcome.response_id);
+  const prev = await responseStore.getResponseById(outcome.response_id);
   if (!prev) {
     throw new Error("Previous response record not found");
   }
@@ -120,10 +120,10 @@ export function editResponse(
     prior_version_id: prev.id,
   };
 
-  responseStore.addResponse(response);
-  outcomeStore.updateOutcome(outcomeId, { response_id: response.id });
+  await responseStore.addResponse(response);
+  await outcomeStore.updateOutcome(outcomeId, { response_id: response.id });
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.response_edited",
     actor: actor.userId,
     space_slug: slug,

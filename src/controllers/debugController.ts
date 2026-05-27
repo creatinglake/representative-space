@@ -9,7 +9,7 @@ import { receiveOutcomeDelivery } from "../services/outcomeService.js";
 import { postResponse } from "../services/responseService.js";
 import { postPosition } from "../services/positionService.js";
 
-export function handleSeed(_req: Request, res: Response): void {
+export async function handleSeed(_req: Request, res: Response): Promise<void> {
   if (process.env.NODE_ENV === "production") {
     res.status(403).json({ error: "Seed is disabled in production" });
     return;
@@ -23,7 +23,7 @@ export function handleSeed(_req: Request, res: Response): void {
     clearSpaces();
 
     // --- Individual space (incumbent) ---
-    const jane = createSpace(
+    const jane = await createSpace(
       {
         sub_type: "individual",
         entity_slug: "jane-doe",
@@ -46,14 +46,14 @@ export function handleSeed(_req: Request, res: Response): void {
       "admin@example.com",
     );
 
-    verifyEntity(
+    await verifyEntity(
       "jane-doe",
       "admin@example.com",
       { entity_did: "did:example:jane", notes: "ID verified via state records" },
     );
 
     // --- Candidate space ---
-    createSpace(
+    await createSpace(
       {
         sub_type: "candidate",
         entity_slug: "bob-smith",
@@ -76,14 +76,14 @@ export function handleSeed(_req: Request, res: Response): void {
       "admin@example.com",
     );
 
-    verifyEntity(
+    await verifyEntity(
       "bob-smith",
       "admin@example.com",
       { entity_did: "did:example:bob", notes: "Campaign filing verified" },
     );
 
     // --- Outcome deliveries to Jane's space ---
-    const outcome1 = receiveOutcomeDelivery("jane-doe", {
+    const outcome1 = await receiveOutcomeDelivery("jane-doe", {
       originating_process_id: "proc_vote_park_reno",
       originating_hub_id: "floyd-county-hub",
       outcome_summary:
@@ -97,7 +97,7 @@ export function handleSeed(_req: Request, res: Response): void {
       addressed_to_slug: "jane-doe",
     });
 
-    const outcome2 = receiveOutcomeDelivery("jane-doe", {
+    const outcome2 = await receiveOutcomeDelivery("jane-doe", {
       originating_process_id: "proc_budget_2026",
       originating_hub_id: "floyd-county-hub",
       outcome_summary:
@@ -111,7 +111,7 @@ export function handleSeed(_req: Request, res: Response): void {
       addressed_to_slug: "jane-doe",
     });
 
-    receiveOutcomeDelivery("jane-doe", {
+    await receiveOutcomeDelivery("jane-doe", {
       originating_process_id: "proc_survey_safety",
       originating_hub_id: "district5-community-hub",
       outcome_summary:
@@ -128,7 +128,7 @@ export function handleSeed(_req: Request, res: Response): void {
       spaceSlug: "jane-doe",
     };
 
-    postResponse(
+    await postResponse(
       "jane-doe",
       outcome1.id,
       {
@@ -139,7 +139,7 @@ export function handleSeed(_req: Request, res: Response): void {
     );
 
     // --- Position statements ---
-    postPosition(
+    await postPosition(
       "jane-doe",
       {
         topic: "Infrastructure Spending",
@@ -150,7 +150,7 @@ export function handleSeed(_req: Request, res: Response): void {
       janeActor,
     );
 
-    postPosition(
+    await postPosition(
       "jane-doe",
       {
         topic: "Community Safety",
@@ -167,7 +167,7 @@ export function handleSeed(_req: Request, res: Response): void {
       spaceSlug: "bob-smith",
     };
 
-    postPosition(
+    await postPosition(
       "bob-smith",
       {
         topic: "Climate Action",
@@ -177,7 +177,7 @@ export function handleSeed(_req: Request, res: Response): void {
       bobActor,
     );
 
-    postPosition(
+    await postPosition(
       "bob-smith",
       {
         topic: "Affordable Housing",

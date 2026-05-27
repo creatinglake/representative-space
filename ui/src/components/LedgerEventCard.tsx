@@ -46,9 +46,9 @@ function OutcomeCard({ event }: Props) {
       <p className="ledger-card-summary">
         Outcome delivered from <strong>{String(data.originating_hub_id ?? "external hub")}</strong>
       </p>
-      {data.originating_process_id && (
+      {data.originating_process_id ? (
         <p className="ledger-card-detail">Process: {String(data.originating_process_id)}</p>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -73,9 +73,9 @@ function PositionCard({ event }: Props) {
         {isUpdate ? "Updated position on" : "New position on"}{" "}
         <strong>{String(data.topic ?? "a topic")}</strong>
       </p>
-      {isUpdate && data.version && (
+      {isUpdate && data.version ? (
         <p className="ledger-card-detail">Version {String(data.version)}</p>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -87,9 +87,9 @@ function IssueCard({ event }: Props) {
       <p className="ledger-card-summary">
         Citizen raised: <strong>{String(data.title ?? "an issue")}</strong>
       </p>
-      {data.entry_type && (
+      {data.entry_type ? (
         <p className="ledger-card-detail">Type: {String(data.entry_type)}</p>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -101,9 +101,9 @@ function IssueResponseCard({ event }: Props) {
       <p className="ledger-card-summary">
         Representative responded to issue
       </p>
-      {data.issue_id && (
+      {data.issue_id ? (
         <p className="ledger-card-detail">Issue: {String(data.issue_id)}</p>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -11,12 +11,12 @@ import { getSpaceBySlug } from "../stores/spaceStore.js";
 import { emitEvent } from "../events/eventEmitter.js";
 import { generateId } from "../utils/id.js";
 
-export function createProcess(
+export async function createProcess(
   slug: string,
   input: CreateProcessInput,
   actor: Actor,
-): Process {
-  const space = getSpaceBySlug(slug);
+): Promise<Process> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -53,9 +53,9 @@ export function createProcess(
     state: initialState,
   };
 
-  processStore.addProcess(process);
+  await processStore.addProcess(process);
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.process.created",
     actor: actor.userId,
     space_slug: slug,
@@ -75,7 +75,7 @@ export async function executeAction(
   processId: string,
   action: ProcessAction,
 ): Promise<Record<string, unknown>> {
-  const process = processStore.getProcessById(processId);
+  const process = await processStore.getProcessById(processId);
   if (!process || process.spaceSlug !== slug) {
     throw new Error(`Process "${processId}" not found on space "${slug}"`);
   }
@@ -87,7 +87,7 @@ export async function executeAction(
 
   const result = await handler.handleAction(process, action);
 
-  processStore.updateProcess(processId, {
+  await processStore.updateProcess(processId, {
     state: process.state,
     status: process.status,
   });
@@ -95,12 +95,12 @@ export async function executeAction(
   return result;
 }
 
-export function getProcess(
+export async function getProcess(
   slug: string,
   processId: string,
   actor?: string,
-): Record<string, unknown> {
-  const process = processStore.getProcessById(processId);
+): Promise<Record<string, unknown>> {
+  const process = await processStore.getProcessById(processId);
   if (!process || process.spaceSlug !== slug) {
     throw new Error(`Process "${processId}" not found on space "${slug}"`);
   }
@@ -113,24 +113,24 @@ export function getProcess(
   return handler.getReadModel(process, actor);
 }
 
-export function listProcesses(slug: string): Record<string, unknown>[] {
-  const space = getSpaceBySlug(slug);
+export async function listProcesses(slug: string): Promise<Record<string, unknown>[]> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
 
-  const processes = processStore.getProcessesBySlug(slug);
+  const processes = await processStore.getProcessesBySlug(slug);
   return processes.map((p) => {
     const handler = getProcessHandler(p.definition.type);
     return handler ? handler.getSummary(p) : { process_id: p.id, type: p.definition.type };
   });
 }
 
-export function getRawProcess(
+export async function getRawProcess(
   slug: string,
   processId: string,
-): Process | undefined {
-  const process = processStore.getProcessById(processId);
+): Promise<Process | undefined> {
+  const process = await processStore.getProcessById(processId);
   if (!process || process.spaceSlug !== slug) return undefined;
   return process;
 }

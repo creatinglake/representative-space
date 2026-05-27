@@ -1,28 +1,67 @@
 import type { CivicEvent } from "../models/event.js";
+import { getSupabase, useDatabase } from "../lib/supabase.js";
+
+const TABLE = "civic_events";
 
 const events: CivicEvent[] = [];
 
-export function appendEvent(event: CivicEvent): void {
-  events.push(event);
+export async function appendEvent(event: CivicEvent): Promise<void> {
+  if (!useDatabase()) {
+    events.push(event);
+    return;
+  }
+  const space_slug =
+    (event.data as Record<string, unknown>).space_slug ?? null;
+  const { error } = await getSupabase()
+    .from(TABLE)
+    .insert({ ...event, space_slug });
+  if (error) throw error;
 }
 
-export function getAllEvents(): CivicEvent[] {
-  return [...events].sort(
-    (a, b) =>
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-  );
+export async function getAllEvents(): Promise<CivicEvent[]> {
+  if (!useDatabase()) {
+    return [...events].sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    );
+  }
+  const { data, error } = await getSupabase()
+    .from(TABLE)
+    .select("*")
+    .order("timestamp", { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(stripSpaceSlugColumn);
 }
 
-export function getEventsBySpaceSlug(slug: string): CivicEvent[] {
-  return getAllEvents().filter(
-    (e) => (e.data as Record<string, unknown>).space_slug === slug,
-  );
+export async function getEventsBySpaceSlug(
+  slug: string,
+): Promise<CivicEvent[]> {
+  if (!useDatabase()) {
+    return (await getAllEvents()).filter(
+      (e) => (e.data as Record<string, unknown>).space_slug === slug,
+    );
+  }
+  const { data, error } = await getSupabase()
+    .from(TABLE)
+    .select("*")
+    .eq("space_slug", slug)
+    .order("timestamp", { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(stripSpaceSlugColumn);
 }
 
-export function getEventCount(): number {
-  return events.length;
+export async function getEventCount(): Promise<number> {
+  if (!useDatabase()) {
+    return events.length;
+  }
+  const { count, error } = await getSupabase()
+    .from(TABLE)
+    .select("id", { count: "exact", head: true });
+  if (error) throw error;
+  return count ?? 0;
 }
 
+/** Clears in-memory store only. Used in tests. */
 export function clearEvents(): void {
   events.length = 0;
 }
@@ -93,7 +132,72 @@ export interface LedgerQueryResult {
   has_more: boolean;
 }
 
-export function queryLedgerEvents(params: LedgerQueryParams): LedgerQueryResult {
+export async function queryLedgerEvents(
+  params: LedgerQueryParams,
+): Promise<LedgerQueryResult> {
+  const { spaceSlug, eventTypes, from, to, limit, cursor } = params;
+
+  if (!useDatabase()) {
+    return queryLedgerEventsInMemory(params);
+  }
+
+  // ── Supabase path ──────────────────────────────────────────
+  let query = getSupabase()
+    .from(TABLE)
+    .select("*")
+    .eq("space_slug", spaceSlug)
+    .neq("meta->>visibility", "restricted")
+    .in("event_type", eventTypes && eventTypes.length > 0
+      ? eventTypes
+      : [...LEDGER_RENDERABLE_TYPES],
+    );
+
+  // Date range filters
+  if (from) {
+    query = query.gte("timestamp", from);
+  }
+  if (to) {
+    query = query.lte("timestamp", to);
+  }
+
+  // Cursor pagination
+  if (cursor) {
+    const decoded = decodeCursor(cursor);
+    query = query.or(
+      `timestamp.lt.${decoded.ts},and(timestamp.eq.${decoded.ts},id.lt.${decoded.id})`,
+    );
+  }
+
+  // Sort and limit
+  query = query
+    .order("timestamp", { ascending: false })
+    .order("id", { ascending: false })
+    .limit(limit + 1);
+
+  const { data, error } = await query;
+  if (error) throw error;
+
+  const rows = (data ?? []).map(stripSpaceSlugColumn);
+  const hasMore = rows.length > limit;
+  const resultEvents = hasMore ? rows.slice(0, limit) : rows;
+
+  const nextCursor =
+    hasMore && resultEvents.length > 0
+      ? encodeCursor(resultEvents[resultEvents.length - 1])
+      : null;
+
+  return {
+    events: resultEvents,
+    next_cursor: nextCursor,
+    has_more: hasMore,
+  };
+}
+
+// ─── In-memory ledger query (unchanged logic) ───────────────
+
+function queryLedgerEventsInMemory(
+  params: LedgerQueryParams,
+): LedgerQueryResult {
   const { spaceSlug, eventTypes, from, to, limit, cursor } = params;
 
   // Decode cursor position if provided
@@ -125,16 +229,21 @@ export function queryLedgerEvents(params: LedgerQueryParams): LedgerQueryResult 
   // Date range filter
   if (from) {
     const fromTime = new Date(from).getTime();
-    filtered = filtered.filter((e) => new Date(e.timestamp).getTime() >= fromTime);
+    filtered = filtered.filter(
+      (e) => new Date(e.timestamp).getTime() >= fromTime,
+    );
   }
   if (to) {
     const toTime = new Date(to).getTime();
-    filtered = filtered.filter((e) => new Date(e.timestamp).getTime() <= toTime);
+    filtered = filtered.filter(
+      (e) => new Date(e.timestamp).getTime() <= toTime,
+    );
   }
 
   // Sort: reverse-chronological, with id descending as tiebreaker
   filtered.sort((a, b) => {
-    const timeDiff = new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    const timeDiff =
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
     if (timeDiff !== 0) return timeDiff;
     return b.id.localeCompare(a.id);
   });
@@ -145,7 +254,8 @@ export function queryLedgerEvents(params: LedgerQueryParams): LedgerQueryResult 
     const cursorIndex = filtered.findIndex((e) => {
       const eventTime = new Date(e.timestamp).getTime();
       if (eventTime < cursorTime) return true;
-      if (eventTime === cursorTime && e.id.localeCompare(cursorId!) <= 0) return true;
+      if (eventTime === cursorTime && e.id.localeCompare(cursorId!) <= 0)
+        return true;
       return false;
     });
     if (cursorIndex >= 0) {
@@ -176,4 +286,15 @@ export function queryLedgerEvents(params: LedgerQueryParams): LedgerQueryResult 
     next_cursor: nextCursor,
     has_more: hasMore,
   };
+}
+
+// ─── Helpers ────────────────────────────────────────────────
+
+/**
+ * Strips the denormalized `space_slug` column that exists only in the
+ * Supabase table so callers always receive a clean CivicEvent shape.
+ */
+function stripSpaceSlugColumn(row: Record<string, unknown>): CivicEvent {
+  const { space_slug: _strip, ...rest } = row;
+  return rest as unknown as CivicEvent;
 }

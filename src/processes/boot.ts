@@ -1,15 +1,15 @@
 import { registerProcessHandler, getRegisteredTypes } from "./registry.js";
-import { createPolisDeliberationHandler } from "../../../shared/process-plugins/polis_deliberation/src/handler.js";
-import { createPolisAdapter } from "../../../shared/process-plugins/polis_deliberation/src/adapter/polisAdapter.js";
-import { createPolisSummarizer } from "../../../shared/process-plugins/polis_deliberation/src/summarization/polisSummarizer.js";
+import { createPolisDeliberationHandler } from "../shared/polis_deliberation/handler.js";
+import { createPolisAdapter } from "../shared/polis_deliberation/adapter/polisAdapter.js";
+import { createPolisSummarizer } from "../shared/polis_deliberation/summarization/polisSummarizer.js";
 import { emitEvent } from "../events/eventEmitter.js";
 import { generateId } from "../utils/id.js";
 import { writeInternalOutcome } from "../services/outcomeService.js";
 import { getResponseById } from "../stores/responseStore.js";
 import { getSpaceBySlug } from "../stores/spaceStore.js";
 import { callClaude } from "../utils/llmClient.js";
-import type { PolisHostInterface } from "../../../shared/process-plugins/polis_deliberation/src/hostInterface.js";
-import type { PolisAdapter } from "../../../shared/process-plugins/polis_deliberation/src/adapter/types.js";
+import type { PolisHostInterface } from "../shared/polis_deliberation/hostInterface.js";
+import type { PolisAdapter } from "../shared/polis_deliberation/adapter/types.js";
 
 let _adapter: PolisAdapter | null = null;
 
@@ -54,9 +54,9 @@ export function bootProcessRegistry(): void {
   });
 
   const host: PolisHostInterface = {
-    emitEvent(input) {
-      const space = getSpaceBySlug(input.space_slug);
-      emitEvent({
+    async emitEvent(input) {
+      const space = await getSpaceBySlug(input.space_slug);
+      await emitEvent({
         event_type: input.event_type,
         actor: input.actor,
         space_slug: input.space_slug,
@@ -67,12 +67,12 @@ export function bootProcessRegistry(): void {
     generateId(prefix) {
       return generateId(prefix || "id");
     },
-    writeOutcomeDelivery(slug, payload) {
-      const outcome = writeInternalOutcome(slug, payload);
+    async writeOutcomeDelivery(slug, payload) {
+      const outcome = await writeInternalOutcome(slug, payload);
       return { id: outcome.id, delivery_timestamp: outcome.delivery_timestamp };
     },
-    getResponseById(responseId) {
-      const r = getResponseById(responseId);
+    async getResponseById(responseId) {
+      const r = await getResponseById(responseId);
       if (!r) return null;
       return { id: r.id, content: r.content };
     },

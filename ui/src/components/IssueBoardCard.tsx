@@ -135,9 +135,9 @@ export default function IssueBoardCard({
       <h4 className="issue-card-title">{issue.title}</h4>
       <p className="issue-card-body">{issue.body}</p>
 
-      {issue.evidence_links.length > 0 && (
+      {(issue as any).evidence_links?.length > 0 && (
         <div className="issue-evidence-links">
-          {issue.evidence_links.map((link, i) => (
+          {((issue as any).evidence_links as string[]).map((link: string, i: number) => (
             <span key={i} className="issue-evidence-pill">
               {link}
             </span>
@@ -150,7 +150,7 @@ export default function IssueBoardCard({
           {issue.jurisdiction_tag}
         </span>
         <span className="issue-author">
-          {pseudonym(issue.initiator_actor_id)}
+          {pseudonym(issue.author_id)}
         </span>
         {issue.version > 1 && (
           <span className="issue-version">edited v{issue.version}</span>

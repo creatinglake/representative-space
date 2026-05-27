@@ -6,12 +6,12 @@ import { getSpaceBySlug } from "../stores/spaceStore.js";
 import { emitEvent } from "../events/eventEmitter.js";
 import { generateId } from "../utils/id.js";
 
-export function postPosition(
+export async function postPosition(
   slug: string,
   input: CreatePositionInput,
   actor: Actor,
-): Position {
-  const space = getSpaceBySlug(slug);
+): Promise<Position> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -40,9 +40,9 @@ export function postPosition(
     linked_outcomes: input.linked_outcomes ?? [],
   };
 
-  store.addPosition(position);
+  await store.addPosition(position);
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.position_posted",
     actor: actor.userId,
     space_slug: slug,
@@ -56,13 +56,13 @@ export function postPosition(
   return position;
 }
 
-export function editPosition(
+export async function editPosition(
   slug: string,
   positionId: string,
   input: UpdatePositionInput,
   actor: Actor,
-): Position {
-  const space = getSpaceBySlug(slug);
+): Promise<Position> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
@@ -71,7 +71,7 @@ export function editPosition(
     throw new Error("Not authorized to edit positions on this space");
   }
 
-  const prev = store.getPositionById(positionId);
+  const prev = await store.getPositionById(positionId);
   if (!prev || prev.space_slug !== slug) {
     throw new Error(`Position "${positionId}" not found on space "${slug}"`);
   }
@@ -84,7 +84,7 @@ export function editPosition(
     throw new Error("Position statement is required");
   }
 
-  store.updatePosition(prev.id, { status: "superseded" });
+  await store.updatePosition(prev.id, { status: "superseded" });
 
   const position: Position = {
     id: generateId("pos"),
@@ -99,9 +99,9 @@ export function editPosition(
     linked_outcomes: input.linked_outcomes ?? prev.linked_outcomes,
   };
 
-  store.addPosition(position);
+  await store.addPosition(position);
 
-  emitEvent({
+  await emitEvent({
     event_type: "civic.position_updated",
     actor: actor.userId,
     space_slug: slug,
@@ -117,25 +117,25 @@ export function editPosition(
   return position;
 }
 
-export function getPositions(slug: string): Position[] {
-  const space = getSpaceBySlug(slug);
+export async function getPositions(slug: string): Promise<Position[]> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
-  return store.getPositionsBySlug(slug);
+  return await store.getPositionsBySlug(slug);
 }
 
-export function getPositionHistory(
+export async function getPositionHistory(
   slug: string,
   positionId: string,
-): Position[] {
-  const space = getSpaceBySlug(slug);
+): Promise<Position[]> {
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     throw new Error(`Space "${slug}" not found`);
   }
-  const position = store.getPositionById(positionId);
+  const position = await store.getPositionById(positionId);
   if (!position || position.space_slug !== slug) {
     throw new Error(`Position "${positionId}" not found on space "${slug}"`);
   }
-  return store.getPositionHistory(positionId);
+  return await store.getPositionHistory(positionId);
 }

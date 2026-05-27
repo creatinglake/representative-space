@@ -7,11 +7,11 @@
     "declaration": false,
     "sourceMap": true,
     "outDir": "dist",
-    "rootDir": "..",
+    "rootDir": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "../shared/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "tests", "ui"]
 }

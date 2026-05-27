@@ -4,8 +4,8 @@ import { getAllEvents } from "../stores/eventStore.js";
 
 const router = Router();
 
-router.get("/moderation/log", requireAdmin, (_req, res) => {
-  const allEvents = getAllEvents();
+router.get("/moderation/log", requireAdmin, async (_req, res) => {
+  const allEvents = await getAllEvents();
   const restricted = allEvents.filter(
     (e) => e.meta.visibility === "restricted",
   );

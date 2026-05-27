@@ -6,12 +6,12 @@ import { requireModeration } from "../modules/civic.moderation/service.js";
 
 export async function handlePostResponse(req: Request, res: Response): Promise<void> {
   try {
-    const actor = resolveActor(res, (req.params.slug as string));
+    const actor = await resolveActor(res, (req.params.slug as string));
 
     // Moderation check
     await requireModeration(req.body.content ?? "");
 
-    const response = responseService.postResponse(
+    const response = await responseService.postResponse(
       (req.params.slug as string),
       (req.params.id as string),
       req.body,
@@ -39,12 +39,12 @@ export async function handlePostResponse(req: Request, res: Response): Promise<v
 
 export async function handleEditResponse(req: Request, res: Response): Promise<void> {
   try {
-    const actor = resolveActor(res, (req.params.slug as string));
+    const actor = await resolveActor(res, (req.params.slug as string));
 
     // Moderation check
     await requireModeration(req.body.content ?? "");
 
-    const response = responseService.editResponse(
+    const response = await responseService.editResponse(
       (req.params.slug as string),
       (req.params.id as string),
       req.body,

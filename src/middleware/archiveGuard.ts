@@ -1,18 +1,18 @@
 import type { NextFunction, Request, Response } from "express";
 import { getSpaceBySlug } from "../stores/spaceStore.js";
 
-export function requireActiveSpace(
+export async function requireActiveSpace(
   req: Request,
   res: Response,
   next: NextFunction,
-): void {
+): Promise<void> {
   const slug = req.params.slug as string | undefined;
   if (!slug) {
     next();
     return;
   }
 
-  const space = getSpaceBySlug(slug);
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     // Let the downstream handler deal with 404
     next();

@@ -5,11 +5,11 @@ import {
   isLedgerRenderableType,
 } from "../stores/eventStore.js";
 
-export function handleGetLedger(req: Request, res: Response): void {
+export async function handleGetLedger(req: Request, res: Response): Promise<void> {
   const slug = req.params.slug as string;
 
   // Validate space exists
-  const space = getSpaceBySlug(slug);
+  const space = await getSpaceBySlug(slug);
   if (!space) {
     res.status(404).json({ error: `Space "${slug}" not found` });
     return;
@@ -50,7 +50,7 @@ export function handleGetLedger(req: Request, res: Response): void {
   const cursor = req.query.cursor as string | undefined;
 
   try {
-    const result = queryLedgerEvents({
+    const result = await queryLedgerEvents({
       spaceSlug: slug,
       eventTypes,
       from,
