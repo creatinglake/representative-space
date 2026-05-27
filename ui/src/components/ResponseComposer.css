@@ -1,0 +1,59 @@
+.response-composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.response-composer textarea {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  resize: vertical;
+}
+
+.response-composer textarea:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+  border-color: var(--color-focus);
+}
+
+.response-composer-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.response-composer-actions button {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+}
+
+.response-composer-actions button:hover {
+  background: var(--color-primary-hover);
+}
+
+.response-composer-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.response-composer-actions .cancel-btn {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.response-composer-actions .cancel-btn:hover {
+  background: var(--color-bg-hover);
+}

@@ -1,0 +1,100 @@
+.ledger-event-card {
+  border-left: 4px solid var(--border-color, #e0e0e0);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background: var(--card-bg, #fafafa);
+  border-radius: 0 6px 6px 0;
+}
+
+.ledger-event-card.pill-outcome {
+  border-left-color: #2563eb;
+}
+
+.ledger-event-card.pill-response {
+  border-left-color: #059669;
+}
+
+.ledger-event-card.pill-position {
+  border-left-color: #7c3aed;
+}
+
+.ledger-event-card.pill-issue {
+  border-left-color: #d97706;
+}
+
+.ledger-event-card.pill-archived {
+  border-left-color: #9ca3af;
+  opacity: 0.7;
+}
+
+.ledger-event-card.pill-default {
+  border-left-color: #6b7280;
+}
+
+.ledger-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.ledger-pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  color: white;
+}
+
+.ledger-pill.pill-outcome {
+  background: #2563eb;
+}
+
+.ledger-pill.pill-response {
+  background: #059669;
+}
+
+.ledger-pill.pill-position {
+  background: #7c3aed;
+}
+
+.ledger-pill.pill-issue {
+  background: #d97706;
+}
+
+.ledger-pill.pill-archived {
+  background: #9ca3af;
+}
+
+.ledger-pill.pill-default {
+  background: #6b7280;
+}
+
+.ledger-card-time {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.ledger-card-body {
+  margin-top: 0.25rem;
+}
+
+.ledger-card-summary {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.ledger-card-detail {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.ledger-card-archive {
+  font-style: italic;
+  color: #9ca3af;
+}

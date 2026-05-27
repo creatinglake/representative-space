@@ -1,0 +1,196 @@
+.issue-composer {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.issue-composer-type-selector {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.issue-composer-type-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.issue-composer-type-btn--active {
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  border-color: var(--color-primary);
+}
+
+.issue-composer-input {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  padding: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.issue-composer-textarea {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  padding: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.issue-composer-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.issue-composer-link-input {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.issue-composer-link-input .issue-composer-input {
+  flex: 1;
+}
+
+.issue-composer-add-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-bg-hover);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.issue-composer-links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.issue-composer-link-pill {
+  font-size: var(--font-size-xs);
+  background: var(--color-bg-hover);
+  color: var(--color-text-muted);
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.issue-composer-link-remove {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  padding: 0 2px;
+}
+
+.issue-composer-poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.issue-composer-label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.issue-composer-poll-option-row {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.issue-composer-poll-option-row .issue-composer-input {
+  flex: 1;
+}
+
+.issue-composer-remove-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  padding: var(--space-xs);
+  line-height: 1;
+}
+
+.issue-composer-add-option-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  background: transparent;
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.issue-composer-error {
+  font-size: var(--font-size-sm);
+  color: #721c24;
+}
+
+.issue-composer-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.issue-composer-actions button[type="submit"] {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-md);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.issue-composer-actions button[type="submit"]:hover {
+  background: var(--color-primary-hover);
+}
+
+.issue-composer-actions .cancel-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-md);
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}

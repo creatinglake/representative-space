@@ -1,0 +1,72 @@
+.space-card {
+  display: block;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.15s;
+}
+
+.space-card:hover {
+  border-color: var(--color-border-strong);
+  text-decoration: none;
+}
+
+.space-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.space-card-name {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+  flex: 1;
+}
+
+.sub-type-pill {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.sub-type-individual {
+  background: var(--pill-individual-bg);
+  color: var(--pill-individual-fg);
+}
+
+.sub-type-candidate {
+  background: var(--pill-candidate-bg);
+  color: var(--pill-candidate-fg);
+}
+
+.space-card-office {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.space-card-meta {
+  display: flex;
+  gap: var(--space-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.space-card-party {
+  color: var(--color-text-muted);
+}
+
+.verified-badge {
+  color: var(--color-success);
+  font-weight: 600;
+}

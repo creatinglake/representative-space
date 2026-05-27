@@ -1,0 +1,4 @@
+.individual-space {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+}

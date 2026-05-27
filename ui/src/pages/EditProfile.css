@@ -1,0 +1,17 @@
+.edit-profile {
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.edit-profile-heading {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  margin-bottom: var(--space-xs);
+}
+
+.edit-profile-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
+}

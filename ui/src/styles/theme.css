@@ -1,0 +1,90 @@
+/*
+ * Representative Space — theme tokens.
+ *
+ * Mirrors the Civic Hub design system. Representative Space may evolve
+ * its own palette (American Landscape) in a future pass; for now the
+ * tokens are shared so the ecosystem feels visually consistent.
+ */
+
+:root {
+  /* --- Color: surfaces --- */
+  --color-bg: #fafaf7;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f3f3ee;
+  --color-surface-muted: #f0f0f0;
+  --color-border: #e5e5e0;
+  --color-border-strong: #d4d4ce;
+  --color-border-hover: #999;
+
+  /* --- Color: text --- */
+  --color-text: #1a1a1a;
+  --color-text-muted: #595959;
+  --color-text-subtle: #8a8a8a;
+  --color-text-faint: #8a8a8a;
+
+  /* --- Color: primary / accents --- */
+  --color-primary: #2c7be5;
+  --color-primary-text: #ffffff;
+  --color-primary-hover: #1a68d1;
+  --color-primary-ink: #1e3a5f;
+
+  --color-brand: #1e3a5f;
+
+  /* --- Color: focus ring --- */
+  --color-focus: #2c7be5;
+
+  /* --- Color: status --- */
+  --color-success: #16a34a;
+  --color-success-bg: #e8f5e9;
+  --color-error: #c62828;
+  --color-error-bg: #fce4ec;
+  --color-warning: #d97706;
+  --color-warning-bg: #fef3c7;
+
+  /* --- Color: sub-type pills --- */
+  --pill-individual-bg: #d6e4f7;
+  --pill-individual-fg: #15325a;
+  --pill-candidate-bg: #d4ede8;
+  --pill-candidate-fg: #0f5a55;
+
+  /* --- Typography --- */
+  --font-body:
+    "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --font-heading:
+    "Manrope Variable", "Manrope", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.75rem;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+
+  /* --- Spacing scale --- */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  /* --- Radii --- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-pill: 9999px;
+
+  /* --- Elevation --- */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* --- Layout --- */
+  --max-width-shell: 1200px;
+  --max-width-content: 960px;
+}

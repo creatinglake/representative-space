@@ -1,0 +1,76 @@
+.position-composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.position-composer label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.position-composer input,
+.position-composer textarea {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.position-composer input:focus,
+.position-composer textarea:focus {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+  border-color: var(--color-focus);
+}
+
+.position-composer textarea {
+  resize: vertical;
+}
+
+.position-composer input:read-only {
+  background: var(--color-bg-hover);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.position-composer-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.position-composer-actions button {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+}
+
+.position-composer-actions button:hover {
+  background: var(--color-primary-hover);
+}
+
+.position-composer-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.position-composer-actions .cancel-btn {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.position-composer-actions .cancel-btn:hover {
+  background: var(--color-bg-hover);
+}

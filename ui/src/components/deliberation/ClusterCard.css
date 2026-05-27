@@ -1,0 +1,75 @@
+.cluster-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+
+.cluster-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.cluster-name {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.cluster-size {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.cluster-statements {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.cluster-statement-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cluster-direction {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cluster-agree {
+  color: var(--color-success);
+}
+
+.cluster-disagree {
+  color: var(--color-error);
+}
+
+.cluster-statement-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+}
+
+.cluster-repness-bar {
+  height: 4px;
+  background: var(--color-surface-alt);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.cluster-repness-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}

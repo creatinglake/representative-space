@@ -1,0 +1,49 @@
+.issue-board {
+  margin-bottom: var(--space-lg);
+}
+
+.issue-board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.issue-board-filters {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.issue-filter-select {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.issue-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.issue-raise-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.issue-raise-btn:hover {
+  background: var(--color-primary-hover);
+}

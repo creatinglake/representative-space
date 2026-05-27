@@ -1,0 +1,117 @@
+.outcome-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.outcome-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.outcome-hub-badge {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-light, #e8f0fe);
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-sm);
+}
+
+.outcome-date {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.outcome-summary {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.outcome-stats {
+  display: flex;
+  gap: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.outcome-result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.outcome-result-item {
+  font-size: var(--font-size-xs);
+  background: var(--color-bg-hover);
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+
+.outcome-response-section {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.outcome-response-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.outcome-response-header strong {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+
+.response-version {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+  background: var(--color-bg-hover);
+  padding: 1px var(--space-xs);
+  border-radius: var(--radius-sm);
+}
+
+.response-date {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.response-content {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.awaiting-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-subtle);
+  font-style: italic;
+}
+
+.response-action-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: var(--space-xs) var(--space-sm);
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-top: var(--space-xs);
+}
+
+.response-action-btn:hover {
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+}

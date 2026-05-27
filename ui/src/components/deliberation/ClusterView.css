@@ -1,0 +1,76 @@
+.cluster-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.cluster-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.cluster-view-title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.cluster-view-meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.consensus-section {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.consensus-heading {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.consensus-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.consensus-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
+  font-size: var(--font-size-sm);
+}
+
+.consensus-text {
+  color: var(--color-text);
+  flex: 1;
+}
+
+.consensus-rate {
+  font-size: var(--font-size-xs);
+  color: var(--color-success);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cluster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-md);
+}

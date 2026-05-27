@@ -1,0 +1,85 @@
+.responsiveness-ledger {
+  margin-top: 2rem;
+}
+
+.ledger-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.ledger-filter-bar {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.ledger-filter-btn {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 16px;
+  background: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ledger-filter-btn:hover {
+  background: #f3f4f6;
+}
+
+.ledger-filter-btn.active {
+  background: #1d4ed8;
+  color: white;
+  border-color: #1d4ed8;
+}
+
+.ledger-date-range {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.ledger-date-range label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.ledger-date-range input[type="date"] {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.ledger-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ledger-load-more {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.6rem;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ledger-load-more:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.ledger-load-more:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,60 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-brand);
+  color: var(--color-primary-text);
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-inner {
+  max-width: var(--max-width-shell);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-primary-text);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: var(--color-primary-text);
+  text-decoration: none;
+}
+
+.dev-identity-select {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-primary-text);
+  cursor: pointer;
+}
+
+.dev-identity-select option {
+  background: var(--color-surface);
+  color: var(--color-text);
+}

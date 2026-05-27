@@ -1,0 +1,115 @@
+.deliberation-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.deliberation-panel-loading,
+.deliberation-panel-error {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.deliberation-panel-error {
+  color: var(--color-error);
+}
+
+.deliberation-panel-header {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+}
+
+.deliberation-topic {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.deliberation-framing {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+.deliberation-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.deliberation-deadline,
+.deliberation-threshold {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.deliberation-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.deliberation-tab {
+  flex: 1;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: var(--space-sm) var(--space-md);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.deliberation-tab:hover {
+  color: var(--color-text);
+}
+
+.deliberation-tab--active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.deliberation-participate {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.deliberation-vote-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.deliberation-no-statements {
+  text-align: center;
+  padding: var(--space-xl) 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.deliberation-no-statements p {
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.deliberation-no-clusters {
+  padding: var(--space-xl) var(--space-lg);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
